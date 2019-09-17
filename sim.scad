@@ -11,6 +11,7 @@ outer_height = inner_height+thick*2;
 m_thick = 2;
 l_thick = 1;
 fix = 0.01;
+min_thick = 0.3;
 
 power_length = 14;
 power_width = 8;
@@ -83,17 +84,9 @@ module top(w, l, thick) {
 
 module main_walls() {
     
-    //cube([inner_length+thick*2,inner_width+thick*2, inner_height+thick*2]);
-
+ 
     cube([inner_length+thick*2,inner_width+thick*2, thick]);
 
-    //cube([inner_length+thick*2,thick, inner_height+thick*2]);
-
-//    translate([0,inner_width+thick,0])
-//    cube([inner_length+thick*2,thick, inner_height+thick*2]);
-
-//    translate([inner_length+thick,0,0])
-//    cube([thick,inner_width+thick*2, inner_height+thick*2]);
         
     wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick);
         
@@ -101,11 +94,11 @@ module main_walls() {
     mirror([0,1,0])
     wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick);
 
-    translate([outer_length,0,0])
-    rotate([0,0,90])
-    wall(w=inner_width+thick*2,h=inner_height+thick*2, thick=thick);
+//    translate([outer_length,0,0])
+//    rotate([0,0,90])
+//    wall(w=inner_width+thick*2,h=inner_height+thick*2, thick=thick);
     
-        translate([0,outer_width,0])
+    translate([0,outer_width,0])
     rotate([0,0,-90])
     wall(w=inner_width+thick*2,h=inner_height+thick*2, thick=thick);
     
@@ -136,25 +129,56 @@ module cables_hole() {
     cube([thick+fix*2, cables_width,cables_height]);
 }
 
-module slide_back() {
+module slide_back(void=true) {
+    function p() = void?0:0.3;
+    
+    color("red")
+    translate([0,thick+fix,thick+fix])
+    union() {
+        hull() {
+
+            translate([-fix,fix+p(),fix])
+            cube([thick+fix*2, inner_width-fix*2-p()*2,  inner_height-fix*2-p()]);
+            
+            translate([(thick-fix)/2, -thick/2+p(), fix])
+            cube([fix, fix, inner_height-fix*2-p()]);
+            
+            translate([(thick-fix)/2, inner_width-fix+thick/2-fix+p(), fix])
+            cube([fix, fix, inner_height-fix*2-p()]);
+        }
+    }
+    
+
 }
 
 
 module main() {
+    
     difference() {
-        union() {            
-            main_walls();
-            power_frame();
-            cables_frame();
-        }        
-        power_hole();
-        cables_hole();
-        slide_back();
+        difference() {
+            union() {            
+                main_walls();
+                power_frame();
+                cables_frame();
+            }        
+            power_hole();
+            cables_hole();
+            
+
+            
+        }
+    
+        slide_back();     
     }
+        
+       
+
 }
 
 
-wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick);
+//wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick);
 
 main();
+
+//slide_back(void=false);
 
