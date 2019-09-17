@@ -1,5 +1,6 @@
 inner_width = 57;
-inner_length = 60;
+//inner_length = 60;
+inner_length = 120;
 inner_height = 35;
 thick = 3;
 
@@ -19,7 +20,7 @@ power_width = 8;
 power_z_offset = 8;
 
 cables_height = 14;
-cables_width = 35;
+cables_width = 51;
 
 
 module blade(w, thick, l_thick) {
@@ -89,11 +90,11 @@ module main_walls() {
     cube([inner_length+thick*2,inner_width+thick*2, thick]);
 
         
-    wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick);
+    wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick, n_big_uprights = 5);
         
     translate([0,inner_width+thick*2,0])
     mirror([0,1,0])
-    wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick);
+    wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick, n_big_uprights = 5);
 
     translate([outer_length,0,0])
     rotate([0,0,90])
@@ -180,36 +181,67 @@ module slide_top(void=true) {
 
 }
 
-module main() {
+module keep()  {
+    
+    translate([inner_length+thick-4-2,thick,thick])
+    cube([2,3, inner_height-3]);    
+}
+
+module keep2()  {
+    
+    translate([inner_length+thick-2,inner_width+thick-10-3,thick])
+    cube([2,3, inner_height-3]);    
+}
+
+module box() {
     
     difference() {
-        difference() {
-            union() {            
-                main_walls();
-                power_frame();
-                cables_frame();
-            }        
-            power_hole();
-            cables_hole();
-            
-
-            
-        }
-    
-        slide_back();
-        slide_top();
+        union() {            
+            main_walls();
+            power_frame();
+            cables_frame();
+            keep();
+            keep2();
+        }        
+        power_hole();
+        cables_hole();
     }
-    
-    
-       
-
 }
+
+module print_box() {
+    
+    difference() {
+        box();    
+        slide_back(void=true);
+        slide_top(void=true);
+    }
+}
+
+module print_slide_back() {
+    
+    color("blue")
+    intersection() {
+        box();    
+        slide_back(void=false);
+    }
+}
+
+
+module print_slide_top() {
+
+    color("green")    
+    intersection() {
+        box();    
+        slide_top(void=false);
+    }
+}
+
 
 
 //wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick);
 
-main();
+print_box();
 
-//slide_back(void=false);
-//slide_top(void=false);
+//print_slide_back();
+//print_slide_top();
 
