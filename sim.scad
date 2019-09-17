@@ -11,6 +11,7 @@ outer_height = inner_height+thick*2;
 m_thick = 2;
 l_thick = 1;
 fix = 0.01;
+
 min_thick = 0.3;
 
 power_length = 14;
@@ -94,16 +95,16 @@ module main_walls() {
     mirror([0,1,0])
     wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick);
 
-//    translate([outer_length,0,0])
-//    rotate([0,0,90])
-//    wall(w=inner_width+thick*2,h=inner_height+thick*2, thick=thick);
+    translate([outer_length,0,0])
+    rotate([0,0,90])
+    wall(w=inner_width+thick*2,h=inner_height+thick*2, thick=thick);
     
     translate([0,outer_width,0])
     rotate([0,0,-90])
     wall(w=inner_width+thick*2,h=inner_height+thick*2, thick=thick);
     
-//    translate([0,0,outer_height-thick])
-//    top(w=outer_width, l=outer_length, thick=m_thick);
+    translate([0,0,outer_height-thick])
+    top(w=outer_width, l=outer_length, thick=m_thick);
 }
 
 
@@ -131,26 +132,53 @@ module cables_hole() {
 
 module slide_back(void=true) {
     function p() = void?0:0.3;
+    function more() = void?thick*2:0;
     
     color("red")
-    translate([0,thick+fix,thick+fix])
+    translate([0,thick,thick])
     union() {
         hull() {
 
             translate([-fix,fix+p(),fix])
-            cube([thick+fix*2, inner_width-fix*2-p()*2,  inner_height-fix*2-p()]);
+            cube([thick+fix*2, inner_width-fix*2-p()*2,  inner_height-fix*2-p()+more()]);
             
             translate([(thick-fix)/2, -thick/2+p(), fix])
-            cube([fix, fix, inner_height-fix*2-p()]);
+            cube([fix, fix, inner_height-fix*2-p()+more()]);
             
-            translate([(thick-fix)/2, inner_width-fix+thick/2-fix+p(), fix])
-            cube([fix, fix, inner_height-fix*2-p()]);
+            translate([(thick-fix)/2, inner_width-fix+thick/2-fix-p(), fix])
+            cube([fix, fix, inner_height-fix*2-p()+more()]);
         }
     }
     
 
 }
 
+
+module slide_top(void=true) {
+    function p() = void?0:0.3;
+
+    
+   
+    
+    
+    color("red")
+    translate([0, thick, thick+inner_height])
+    union() {
+        hull() {
+
+            translate([-fix,fix+p(),-fix])
+            cube([fix+thick+inner_length-p(), inner_width-fix*2-p()*2,  thick+fix*2]);
+            
+            translate([-fix,fix+p()-thick/2, (thick-fix)/2])
+            cube([fix+thick+inner_length-p(), fix, fix]);
+            
+            translate([-fix, inner_width-fix+thick/2-fix-p(), (thick-fix)/2])
+            cube([fix+thick+inner_length-p(), fix, fix]);
+        }
+    }
+    
+
+}
 
 module main() {
     
@@ -168,9 +196,11 @@ module main() {
             
         }
     
-        slide_back();     
+        slide_back();
+        slide_top();
     }
-        
+    
+    
        
 
 }
@@ -181,4 +211,5 @@ module main() {
 main();
 
 //slide_back(void=false);
+//slide_top(void=false);
 
