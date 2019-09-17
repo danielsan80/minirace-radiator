@@ -15,7 +15,7 @@ fix = 0.01;
 
 min_thick = 0.3;
 
-power_length = 14;
+power_length = 7;
 power_width = 8;
 power_z_offset = 8;
 
@@ -240,8 +240,8 @@ module print_slide_top() {
 
 //wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick);
 
-print_box();
+//print_box();
 
 //print_slide_back();
-//print_slide_top();
+print_slide_top();
 
