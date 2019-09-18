@@ -37,7 +37,19 @@ module blade(w, thick, l_thick) {
     }
 }
 
-module wall(w, h, thick, l_thick=1, n_big_uprights = 2, n_little_uprights=3, n_blades=20) {     
+module wall(w, h, thick, l_thick=1, n_big_uprights = 2, n_little_uprights=3, n_blades=13) {
+    
+    big_window = (w-thick*n_big_uprights)/(n_big_uprights+1);
+    little_window = (big_window-l_thick*n_little_uprights)/(n_little_uprights+1);
+    
+    echo(
+        "bigs:", n_big_uprights,
+        "littles:", n_little_uprights,
+        "blades:", n_blades,
+        "w:", w,
+        "big_window: ", big_window,
+        "little_window: ", little_window
+    );
     
     cube([w, thick, thick]);
     
@@ -90,19 +102,19 @@ module main_walls() {
     cube([inner_length+thick*2,inner_width+thick*2, thick]);
 
         
-    wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick, n_big_uprights = 5);
+    wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick, n_big_uprights = 5, n_little_uprights=2);
         
     translate([0,inner_width+thick*2,0])
     mirror([0,1,0])
-    wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick, n_big_uprights = 5);
+    wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick, n_big_uprights = 5, n_little_uprights=2);
 
     translate([outer_length,0,0])
     rotate([0,0,90])
-    wall(w=inner_width+thick*2,h=inner_height+thick*2, thick=thick);
+    wall(w=inner_width+thick*2,h=inner_height+thick*2, thick=thick, n_big_uprights = 2, n_little_uprights=2);
     
     translate([0,outer_width,0])
     rotate([0,0,-90])
-    wall(w=inner_width+thick*2,h=inner_height+thick*2, thick=thick);
+    wall(w=inner_width+thick*2,h=inner_height+thick*2, thick=thick, n_big_uprights = 2, n_little_uprights=2);
     
     translate([0,0,outer_height-thick])
     top(w=outer_width, l=outer_length, thick=m_thick);
@@ -240,8 +252,9 @@ module print_slide_top() {
 
 //wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick);
 
+box();
 //print_box();
 
 //print_slide_back();
-print_slide_top();
+//print_slide_top();
 
