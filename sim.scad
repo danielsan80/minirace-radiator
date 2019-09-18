@@ -15,11 +15,11 @@ fix = 0.01;
 
 min_thick = 0.3;
 
-power_length = 7;
+power_length = 14;
 power_width = 8;
 power_z_offset = 8;
 
-cables_height = 14;
+cables_height = 7;
 cables_width = 51;
 
 
@@ -153,13 +153,13 @@ module slide_back(void=true) {
         hull() {
 
             translate([-fix,fix+p(),fix])
-            cube([thick+fix*2, inner_width-fix*2-p()*2,  inner_height-fix*2-p()+more()]);
+            cube([thick+fix*2, inner_width-fix*2-p()*2,  inner_height+thick+fix-fix-p()]);
             
             translate([(thick-fix)/2, -thick/2+p(), fix])
-            cube([fix, fix, inner_height-fix*2-p()+more()]);
+            cube([fix, fix, inner_height+thick+fix-fix-p()]);
             
             translate([(thick-fix)/2, inner_width-fix+thick/2-fix-p(), fix])
-            cube([fix, fix, inner_height-fix*2-p()+more()]);
+            cube([fix, fix, inner_height+thick+fix-fix-p()]);
         }
     }
     
@@ -169,7 +169,7 @@ module slide_back(void=true) {
 
 module slide_top(void=true) {
     function p() = void?0:0.3;
-
+    function more() = void?thick*2:0;
     
    
     
@@ -179,14 +179,14 @@ module slide_top(void=true) {
     union() {
         hull() {
 
-            translate([-fix,fix+p(),-fix])
-            cube([fix+thick+inner_length-p(), inner_width-fix*2-p()*2,  thick+fix*2]);
+            translate([thick+fix+p()-more(),fix+p(),-fix])
+            cube([inner_length-fix*2-p()*2+more(), inner_width-fix*2-p()*2,  thick+fix*2]);
             
-            translate([-fix,fix+p()-thick/2, (thick-fix)/2])
-            cube([fix+thick+inner_length-p(), fix, fix]);
+            translate([thick+fix+p()-more(), fix+p()-thick/2, (thick-fix)/2])
+            cube([inner_length-fix*2-p()*2+more(), fix, fix]);
             
-            translate([-fix, inner_width-fix+thick/2-fix-p(), (thick-fix)/2])
-            cube([fix+thick+inner_length-p(), fix, fix]);
+            translate([thick+fix+p()-more(), inner_width-fix+thick/2-fix-p(), (thick-fix)/2])
+            cube([inner_length-fix*2-p()*2+more(), fix, fix]);
         }
     }
     
@@ -252,9 +252,9 @@ module print_slide_top() {
 
 //wall(w=inner_length+thick*2,h=inner_height+thick*2, thick=thick);
 
-box();
-//print_box();
+//box();
+print_box();
 
-//print_slide_back();
-//print_slide_top();
+print_slide_back();
+print_slide_top();
 
