@@ -193,9 +193,9 @@ module slide_top(void=true) {
 
 }
 
-module keep()  {
+module keep1()  {
     
-    translate([inner_length+thick-4-2,thick,thick])
+    translate([inner_length+thick-2-4-2,thick,thick])
     cube([2,3, inner_height-3]);    
 }
 
@@ -212,7 +212,7 @@ module box() {
             main_walls();
             power_frame();
             cables_frame();
-            keep();
+            keep1();
             keep2();
         }        
         power_hole();
