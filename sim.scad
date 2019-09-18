@@ -152,13 +152,13 @@ module slide_back(void=true) {
     union() {
         hull() {
 
-            translate([-fix,fix+p(),fix])
+            translate([-fix,fix+p(),fix+p()])
             cube([thick+fix*2, inner_width-fix*2-p()*2,  inner_height+thick+fix-fix-p()]);
             
-            translate([(thick-fix)/2, -thick/2+p(), fix])
+            translate([(thick-fix)/2, -thick/2+p(), fix+p()])
             cube([fix, fix, inner_height+thick+fix-fix-p()]);
             
-            translate([(thick-fix)/2, inner_width-fix+thick/2-fix-p(), fix])
+            translate([(thick-fix)/2, inner_width-fix+thick/2-fix-p(), fix+p()])
             cube([fix, fix, inner_height+thick+fix-fix-p()]);
         }
     }
