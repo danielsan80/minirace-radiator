@@ -22,10 +22,15 @@ power_z_offset = 8;
 cables_height = 7;
 cables_width = 51;
 
+blade_thick = 0.3;
+blade_shift = 0.3;
+
+blade_height = blade_thick+thick-l_thick-blade_shift; 
+
+
 
 module blade(w, thick, l_thick) {
-    blade_thick = 0.3;
-    shift = 0.3;
+    shift = blade_shift;
     
     
     hull() {        
@@ -35,9 +40,10 @@ module blade(w, thick, l_thick) {
         translate([0,shift,thick-l_thick-shift])
         cube([w,l_thick, blade_thick]);
     }
+
 }
 
-module wall(w, h, thick, l_thick=1, n_big_uprights = 2, n_little_uprights=3, n_blades=13) {
+module wall(w, h, thick, l_thick=1, n_big_uprights = 2, n_little_uprights=3, n_blades=15) {
     
     big_window = (w-thick*n_big_uprights)/(n_big_uprights+1);
     little_window = (big_window-l_thick*n_little_uprights)/(n_little_uprights+1);
@@ -66,8 +72,8 @@ module wall(w, h, thick, l_thick=1, n_big_uprights = 2, n_little_uprights=3, n_b
     
     
     little_upright_step = (big_upright_step-thick+l_thick)/(n_little_uprights+1);
-    
-    blade_step = (h-thick*2)/(n_blades+1);
+        
+    blade_step = (h-thick*2-blade_height)/(n_blades-1);
     
     for (i = [0:n_big_uprights]) {
         translate([i*big_upright_step,0,0])
@@ -81,7 +87,7 @@ module wall(w, h, thick, l_thick=1, n_big_uprights = 2, n_little_uprights=3, n_b
         }
     }
      
-    for (i = [0:n_blades]) {
+    for (i = [0:n_blades-1]) {
         translate([0,0,thick+i*blade_step])
         blade(w=w,thick=thick, l_thick=l_thick);
       
@@ -144,7 +150,7 @@ module cables_hole() {
 }
 
 module slide_back(void=true) {
-    function p() = void?0:0.3;
+    function p() = void?0:0.5;
     function more() = void?thick*2:0;
     
     color("red")
@@ -201,8 +207,17 @@ module keep1()  {
 
 module keep2()  {
     
-    translate([inner_length+thick-2,inner_width+thick-10-3,thick])
-    cube([2,3, inner_height-3]);    
+    translate([inner_length+thick-4,inner_width+thick-20-3,thick])
+    cube([4,8, inner_height-3]);    
+}
+
+module slide_back_fix() {
+    translate([0,2,thick])
+    cube([thick, thick, inner_height]);
+    
+    translate([0,inner_width+thick-2,thick])
+    cube([thick, thick, inner_height]);
+
 }
 
 module box() {
@@ -210,6 +225,8 @@ module box() {
     difference() {
         union() {            
             main_walls();
+            slide_back_fix();
+            
             power_frame();
             cables_frame();
             keep1();
@@ -231,7 +248,7 @@ module print_box() {
 
 module print_slide_back() {
     
-    color("blue")
+//    color("blue")
     intersection() {
         box();    
         slide_back(void=false);
@@ -241,7 +258,7 @@ module print_slide_back() {
 
 module print_slide_top() {
 
-    color("green")    
+//    color("green")    
     intersection() {
         box();    
         slide_top(void=false);
@@ -256,5 +273,5 @@ module print_slide_top() {
 print_box();
 
 print_slide_back();
-print_slide_top();
+//print_slide_top();
 
